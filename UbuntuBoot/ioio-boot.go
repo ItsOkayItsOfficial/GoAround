@@ -37,7 +37,7 @@ func Reader() string {
 
 		// If input char count not 0 then return it as the new logo path
 		if strings.Compare("", text) != 0 {
-			fmt.Println("Building...")
+			fmt.Println("Updating...")
 			return text
 		}
 
