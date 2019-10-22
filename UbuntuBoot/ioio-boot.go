@@ -70,5 +70,7 @@ func main() {
 	if err = ioutil.WriteFile(info.Name, output, 0666); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
+	} else {
+		fmt.Println("Boot logo successfully updated!")
 	}
 }
