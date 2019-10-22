@@ -2,10 +2,10 @@ package main
 
 import (
 	"bufio"
-	"bytes"
 	"fmt"
 	"io/ioutil"
 	"os"
+	"regexp"
 	"strings"
 )
 
@@ -47,19 +47,26 @@ func Reader() string {
 
 func main() {
 
-	logoPath := Reader()
+	// Variables more for clarity than anything
+	logoFile := "ioio-logo.script"
+	logoName := `logo_filename = .*;`
+	logoPath := `logo_filename = "` + Reader() + `";`
 
-	info := NewFile("ioio-logo.script", "{LOGO}", logoPath)
+	// Construct new File
+	info := NewFile(logoFile, logoName, logoPath)
 
 	input, err := ioutil.ReadFile(info.Name)
-
+	// Run input
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
 
-	output := bytes.Replace(input, []byte(info.Key), []byte(info.Logo), -1)
+	// Construct regex with logoName
+	reg := regexp.MustCompile(info.Key)
 
+	output := reg.ReplaceAll(input, []byte(info.Logo))
+	// Run output
 	if err = ioutil.WriteFile(info.Name, output, 0666); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
