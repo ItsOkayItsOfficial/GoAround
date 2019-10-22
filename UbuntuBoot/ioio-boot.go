@@ -1,10 +1,12 @@
 package main
 
 import (
+	"bufio"
 	"bytes"
 	"fmt"
 	"io/ioutil"
 	"os"
+	"strings"
 )
 
 // File struct type
@@ -20,9 +22,34 @@ func NewFile(name string, key string, logo string) *File {
 	return &f
 }
 
+// Reader takes console input, converts to LF and returns as string
+func Reader() string {
+	reader := bufio.NewReader(os.Stdin)
+
+	// Looping to wait for input
+	for {
+		// Request input
+		fmt.Print("Enter new logo path-> ")
+		text, _ := reader.ReadString('\n')
+
+		// Convert input CRLF to LF
+		text = strings.Replace(text, "\n", "", -1)
+
+		// If input char count not 0 then return it as the new logo path
+		if strings.Compare("", text) != 0 {
+			fmt.Println("Building...")
+			return text
+		}
+
+	}
+
+}
+
 func main() {
 
-	info := NewFile("ioio-logo.script", "{LOGO}", "usr/share/plymouth/theme/ioio-logo/ioio-logo.png")
+	logoPath := Reader()
+
+	info := NewFile("ioio-logo.script", "{LOGO}", logoPath)
 
 	input, err := ioutil.ReadFile(info.Name)
 
