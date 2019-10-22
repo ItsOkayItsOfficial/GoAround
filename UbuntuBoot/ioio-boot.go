@@ -4,7 +4,9 @@ import (
 	"bufio"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
+	"os/exec"
 	"regexp"
 	"strings"
 )
@@ -70,8 +72,7 @@ func main() {
 	input, err := ioutil.ReadFile(info.Name)
 	// Run input
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		log.Fatalf("Could not read ioio-logo.script file. System returned the following: %s\n", err)
 	}
 
 	// Construct regex with logoName
@@ -80,9 +81,13 @@ func main() {
 	output := reg.ReplaceAll(input, []byte(info.Logo))
 	// Run output
 	if err = ioutil.WriteFile(info.Name, output, 0666); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	} else {
-		fmt.Println("Boot logo successfully updated!")
+		log.Fatalf("Could not update ioio-logo.script file. System returned the following: %s\n", err)
 	}
+
+	cmd := exec.Command("update-initramfs", "-u")
+	err = cmd.Run()
+	if err != nil {
+		log.Fatalf("Could not update system init config. Ensure ioio-boot is being run with elevated permissions. System returned the following: %s\n", err)
+	}
+	fmt.Println("Boot logo successfully updated!")
 }
