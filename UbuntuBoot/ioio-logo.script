@@ -1,3 +1,3 @@
 if (bits_per_pixel == 4) {
-    logo_filename = "ioio-New.png";
+    logo_filename = "/usr/share/plymouth/themes/ioio-logo/logo_circ_150x150.png";
 }

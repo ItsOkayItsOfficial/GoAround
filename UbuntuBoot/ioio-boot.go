@@ -29,20 +29,32 @@ func Reader() string {
 	// Looping to wait for input
 	for {
 		// Request input
-		fmt.Print("Enter new logo path-> ")
+		fmt.Print("Enter new logo file-> ")
 		text, _ := reader.ReadString('\n')
 
 		// Convert input CRLF to LF
 		text = strings.Replace(text, "\n", "", -1)
 
 		// If input char count not 0 then return it as the new logo path
-		if strings.Compare("", text) != 0 {
+		if FileExists(text) {
 			fmt.Println("Updating...")
 			return text
 		}
 
+		// Return error message should FileExists = false
+		fmt.Println(`File "` + text + `" either does not exist or is a directory.`)
 	}
+}
 
+// FileExists checks to see that input string file exists
+func FileExists(file string) bool {
+	exists, err := os.Stat(file)
+
+	// Returns false should file not exist or is directory
+	if os.IsNotExist(err) {
+		return false
+	}
+	return !exists.IsDir()
 }
 
 func main() {
